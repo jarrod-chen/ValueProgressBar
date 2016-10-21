@@ -19,6 +19,8 @@
         bar:textSize="14sp"
         style="@style/progressbarStyle_Horizontal_Red"
         bar:textColor="#cccccc"
+        android:paddingRight="50dp"
+        android:paddingLeft="50dp"
         android:layout_centerInParent="true"/>
 
     <Button
