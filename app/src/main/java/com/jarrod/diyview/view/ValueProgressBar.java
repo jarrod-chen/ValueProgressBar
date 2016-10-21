@@ -15,12 +15,13 @@ import android.widget.ProgressBar;
 import com.jarrod.diyview.R;
 
 /**
- * Created by win10 on 2016/10/20.
+ * Created by jarrod on 2016/10/20.
  */
 
 public class ValueProgressBar extends ProgressBar {
     private String text;
     private Paint mPaint;
+    private Rect mRect;
 
     public ValueProgressBar(Context context) {
         super(context, null);
@@ -44,16 +45,24 @@ public class ValueProgressBar extends ProgressBar {
         this.mPaint.setTextSize(textSize);
         this.mPaint.setColor(textColor);
         a.recycle();
+        mRect = new Rect();
     }
 
     @Override
     protected synchronized void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Log.i("ValueProgressBar", this.text);
-        Rect rect = new Rect();
-        this.mPaint.getTextBounds(this.text, 0, this.text.length(), rect);
-        int x = (getWidth() / 2) - rect.centerX();
-        int y = (getHeight() / 2) - rect.centerY();
+        if (mRect == null) {
+            mRect = new Rect();
+        }
+        this.mPaint.getTextBounds(this.text, 0, this.text.length(), mRect);
+        int realWidth = getWidth() - getPaddingLeft() - getPaddingRight();
+        int x = getProgress() * realWidth / getMax() + getPaddingLeft();      //这里的数值在进度后面
+        if ((realWidth + getPaddingLeft() - x) < mRect.width()) {
+            x = realWidth - mRect.width() + getPaddingLeft();
+        }
+        int y = (getHeight() / 2) - mRect.centerY();
+//        int x = (getWidth() / 2) - rect.centerX();        //这里的数值在进度调中间
         canvas.drawText(this.text, x, y, this.mPaint);
     }
 
